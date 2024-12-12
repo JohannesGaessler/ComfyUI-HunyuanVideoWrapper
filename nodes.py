@@ -1,4 +1,5 @@
 import os
+import random
 import torch
 import json
 import gc
@@ -904,6 +905,8 @@ class HyVideoSampler:
                     f"STG-A requires attention_mode to be 'sdpa', but got {transformer.attention_mode}."
             )
 
+        if seed == 0:
+            seed = random.randint(0, 2 ** 32 - 1)
         generator = torch.Generator(device=torch.device("cpu")).manual_seed(seed)
 
         if width <= 0 or height <= 0 or num_frames <= 0:
@@ -1175,7 +1178,8 @@ class HyVideoLatentPreview:
                               [-0.13, -0.4, -0.05],
                               [-0.01, -0.01, -0.48]]
 
-        import random
+        if seed == 0:
+            seed = random.randint(0, 2 ** 32 - 1)
         random.seed(seed)
         #latent_rgb_factors = [[random.uniform(min_val, max_val) for _ in range(3)] for _ in range(16)]
         out_factors = latent_rgb_factors
